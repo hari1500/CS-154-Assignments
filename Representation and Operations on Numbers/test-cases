@@ -1,0 +1,245 @@
+
+
+
+;;Add the following to the end of your program file
+
+(define l 3)  ;; significand length
+(define k 4)  ;; exponent length 
+(define n 8)  ;; length of signed/unsigned integers
+
+(u2b n 14)
+(u2b n 23)
+(u2b n 123)
+;(u2b n 256)
+
+"Unsigned addition"
+
+(b2u n (u-add n (u2b n 14) (u2b n 23)))
+(b2u n (u-add n (u2b n 23) (u2b n 123)))
+(b2u n (u-add n (u2b n 255) (u2b n 23)))
+(b2u n (u-add n (u2b n 0) (u2b n 23)))
+
+"Unsigned subtraction"
+(b2u n (u-sub n (u2b n 14) (u2b n 23)))
+(b2u n (u-sub n (u2b n 23) (u2b n 123)))
+(b2u n (u-sub n (u2b n 255) (u2b n 23)))
+(b2u n (u-sub n (u2b n 0) (u2b n 23)))
+
+
+"Signed addition"
+
+(b2s n (u-add n (s2b n -14) (s2b n -23)))
+(b2s n (u-add n (s2b n -23) (s2b n 123)))
+(b2s n (u-add n (s2b n 127) (s2b n -23)))
+(b2s n (u-add n (s2b n 0) (s2b n -23)))
+
+"Unsigned multiplication"
+
+(b2u (* 2 n) (u-mult n (u2b n 14) (u2b n 23)))
+(b2u (* 2 n) (u-mult n (u2b n 23) (u2b n 123)))
+(b2u (* 2 n) (u-mult n (u2b n 255) (u2b n 23)))
+(b2u (* 2 n) (u-mult n (u2b n 0) (u2b n 23)))
+
+"Signed multiplication"
+
+(b2s (* 2 n) (s-mult n (s2b n -14) (s2b n -23)))
+(b2s (* 2 n) (s-mult n (s2b n -23) (s2b n 123)))
+(b2s (* 2 n) (s-mult n (s2b n 127) (s2b n -23)))
+(b2s (* 2 n) (s-mult n (s2b n 0) (s2b n -23)))
+
+"Unsigned division"
+
+(let ((res (u-div n (s2b n 14) (s2b n 23))))
+  (list (b2s n (car res)) (b2s n (cadr res))))
+(let ((res (u-div n (s2b n 23) (s2b n 123))))
+  (list (b2s n (car res)) (b2s n (cadr res))))
+(let ((res (u-div n (s2b n 127) (s2b n 23))))
+  (list (b2s n (car res)) (b2s n (cadr res))))
+(let ((res (u-div n (s2b n 0) (s2b n 23))))
+  (list (b2s n (car res)) (b2s n (cadr res))))
+
+"d2float"
+
+(d2float k l (/ 1 512))
+(d2float k l (/ 1 1024))
+(d2float k l (/ 8 512))
+(d2float k l 0)
+(d2float k l 224)
+(d2float k l 240)
+(d2float k l 241)
+(d2float k l 2400)
+
+"float2d"
+
+(float2d k l (d2float k l (/ 1 512)))
+(float2d k l (d2float k l (/ 1 1024)))
+(float2d k l (d2float k l (/ 8 512)))
+(float2d k l (d2float k l 0))
+(float2d k l (d2float k l 224))
+(float2d k l (d2float k l 240))
+(float2d k l (d2float k l 241))
+(float2d k l (d2float k l 2400))
+
+"Floating point multiplication"
+
+(float2d k l (mult k l (d2float k l (/ 1 512)) (d2float k l 512)))
+(float2d k l (mult k l (d2float k l (/ 1 512)) (d2float k l 2)))
+(float2d k l (mult k l (d2float k l 24) (d2float k l 48)))
+(float2d k l (mult k l (d2float k l 0) (d2float k l 0)))
+(float2d k l (mult k l (d2float k l (/ 1 512)) (d2float k l 224)))
+(float2d k l (mult k l (d2float k l 240) (d2float k l 512)))
+(float2d k l (mult k l (d2float k l (/ 1 512)) (d2float k l (/ 512 1))))
+
+"Floating point division"
+
+(float2d k l (divide k l (d2float k l (/ 1 512)) (d2float k l 512)))
+(float2d k l (divide k l (d2float k l (/ 1 512)) (d2float k l 2)))
+(float2d k l (divide k l (d2float k l 24) (d2float k l 48)))
+(float2d k l (divide k l (d2float k l 0) (d2float k l 1)))
+(float2d k l (divide k l (d2float k l (/ 1 512)) (d2float k l 224)))
+(float2d k l (divide k l (d2float k l 240) (d2float k l 512)))
+(float2d k l (divide k l (d2float k l (/ 1 512)) (d2float k l (/ 512 1))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+The output should be:
+
+(0 0 0 0 1 1 1 0)
+(0 0 0 1 0 1 1 1)
+(0 1 1 1 1 0 1 1)
+"Unsigned addition"
+37
+146
+22
+23
+"Unsigned subtraction"
+0
+0
+232
+0
+"Signed addition"
+-37
+100
+104
+-23
+"Unsigned multiplication"
+322
+2829
+5865
+0
+"Signed multiplication"
+322
+-2829
+-2921
+0
+"Unsigned division"
+(0 14)
+(0 23)
+(5 12)
+(0 0)
+"d2float"
+(0 (0 0 0) 0 0 0 1)
+(0 (0 0 0) 0 0 0 0)
+(0 (0 0 0) 1 0 0 0)
+(0 (0 0 0) 0 0 0 0)
+(0 (1 1 1) 0 1 1 0)
+(0 (1 1 1) 0 1 1 1)
+(0 (1 1 1) 0 1 1 1)
+(0 (1 1 1) 0 1 1 1)
+"float2d"
+#e0.001953125
+0.0
+#e0.015625
+0.0
+224
+240
+240
+240
+"Floating point multiplication"
+#e0.46875
+#e0.00390625
+240
+0.0
+#e0.4375
+240
+#e0.46875
+"Floating point division"
+0.0
+0.0
+#e0.5
+0.0
+0.0
+1
+0.0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Now change k to 8, l to 23 and n to 16,  and you will see the following output:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0)
+(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 1)
+(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 1 1)
+"Unsigned addition"
+37
+146
+278
+23
+"Unsigned subtraction"
+0
+0
+232
+0
+"Signed addition"
+-37
+100
+104
+-23
+"Unsigned multiplication"
+322
+2829
+5865
+0
+"Signed multiplication"
+322
+-2829
+-2921
+0
+"Unsigned division"
+(0 14)
+(0 23)
+(5 12)
+(0 0)
+"d2float"
+(0 (0 1 1 1 0 1 1 0) (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (0 1 1 1 0 1 0 1) (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (0 1 1 1 1 0 0 1) (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (0 0 0 0 0 0 0 0) (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (1 0 0 0 0 1 1 0) (1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (1 0 0 0 0 1 1 0) (1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (1 0 0 0 0 1 1 0) (1 1 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+(0 (1 0 0 0 1 0 1 0) (0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+"float2d"
+#e0.001953125
+#e0.0009765625
+#e0.015625
+0.0
+224
+240
+241
+2400
+"Floating point multiplication"
+1
+#e0.00390625
+1152
+0.0
+#e0.4375
+122880
+1
+"Floating point division"
+#e0.000003814697265625
+#e0.0009765625
+#e0.5
+0.0
+#e0.0000087193075160030275583...
+#e0.46875
+#e0.000003814697265625

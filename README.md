@@ -1,2 +1,2 @@
-# CS-154-assignments
+# CS-154-Assignments
 All Assignments in CS 154
